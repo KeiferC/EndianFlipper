@@ -7,7 +7,7 @@
 #       description:    Quick script to automate flipping bit
 #                       endianness
 #
-#       usage:          python endian-flip.py -s <integer_size> <FILE>
+#       usage:          python endian-flip.py [-h] [-s <N>] <FILE>
 #
 #       TODO:           - Input type option (currently default to hex)
 #                       - Input type validation
@@ -17,7 +17,7 @@
 #                       - Robust num bits testing
 #
 
-import sys
+import sys, argparse
 
 #########################################
 # Main                                  #
@@ -29,12 +29,13 @@ import sys
 # @return       n/a
 #
 def main():
-        if (valid_input()):
-                print(*flip_endian(parse_infile()))
-                sys.exit()
-        else:
-                usage()
-                sys.exit("Usage error")
+        args = parse_arguments()
+        int_rep = args.size
+        filename = args.filename
+        hex_arr = parse_infile(filename)
+        
+        print(*flip_endian(int_size, hex_arr))
+        sys.exit()
 
 
 #########################################
@@ -46,47 +47,51 @@ def main():
 # values in accordance with the integer representation. Returns an array 
 # of flipped hex values.
 #
-# @param        {dictionary} flipper_args: contains the following kv-pairs
-#                       {number} int_size: # bits for int representation
-#                       {list} hex_arr: array of hex values to flip
+# @param        {int} int_size: # bits for int representation
+#               {list} hex_arr: array of hex values to flip
 # @return       {list} array of flipped hex values
 #
-def flip_endian(flipper_args):
+def flip_endian(int_size, hex_arr):
         # TODO
 
-        return ["test", "one"]
+        return hex_arr
 
 
 #########################################
 # Command-Line Parsing                  #
 #########################################
 #
-# Returns true if the command-line arguments are valid. Currently not 
-# robust at all for speedy scripting and use.
+# Parses command-line arguments and returns a dictionary of argument
+# objects
 #
 # @param        n/a
-# @returns      {boolean} True if arguments are valid
+# @returns      {dictionary} Contains following key-value pairs:
+#                       {string} filename: name of file to parse
+#                       {int} size: # of bits for int representation
 #
-def valid_input():
-        # TODO
+def parse_arguments():
+        description = "Quick script to automate the flipping of bit endianness."
+        file_help = "Name of file containing hex values."
+        size_help = "Number of bits in integer representation."
 
-        return True
+        parser = argparse.ArgumentParser(description=description)
+
+        parser.add_argument("filename", metavar="<FILE>", help=file_help)
+        parser.add_argument("-s", "--size", dest="size", metavar="<N>", 
+                type=int, choices=[16, 32, 64], default=16, help=size_help)
+
+        return vars(parser.parse_args())
 
 #
-# Retrieves command-line arguments from system and parses given file
-# accordingly. Returns a dictionary containing integer representation
-# and array of hex values from file.
+# Given a filename, opens file and returns an array of hex values to flip
 #
-# @param        n/a
-# @returns      {dictionary} flipper_args: contains the following kv-pairs
-#                       {number} int_size: # bits for int representation
-#                       {list} hex_arr: array of hex values to flip
+# @param        {string} filename: file to open
+# @returns      {list} array of hex values to flip
 #
-def parse_infile():
-        # TODO
+def parse_infile(filename):
+        hex_arr = ["test", "one"]
 
-        flipper_args = {"num_bits": None, "hex_arr": None}
-        return flipper_args
+        return hex_arr
 
 
 #########################################
