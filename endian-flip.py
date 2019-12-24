@@ -7,7 +7,7 @@
 #       description:    Quick script to automate flipping bit
 #                       endianness
 #
-#       usage:          python xmlparser.py -s <integer_size> <FILE>
+#       usage:          python endian-flip.py -s <integer_size> <FILE>
 #
 #       TODO:           - Input type option (currently default to hex)
 #                       - Input type validation
