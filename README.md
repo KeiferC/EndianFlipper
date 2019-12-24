@@ -11,7 +11,7 @@ a file containing hex values.
 $ git init
 $ git clone https://github.com/KeiferC/EndianFlipper.git
 $ cd EndianFlipper
-$ python endian-flip.py -s <integer_size> <FILE>
+$ python endian-flip.py [-h] [-s <N>] <FILE>
 ```
 
 ### Requirements
@@ -19,3 +19,4 @@ $ python endian-flip.py -s <integer_size> <FILE>
 
 ### Imported Modules
 - sys
+- argparse
