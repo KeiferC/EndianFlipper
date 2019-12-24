@@ -11,7 +11,18 @@ a file containing hex values.
 $ git init
 $ git clone https://github.com/KeiferC/EndianFlipper.git
 $ cd EndianFlipper
-$ python endian-flip.py [-h] [-s <N>] <FILE>
+
+usage: endian-flip.py [-h] [-s <N>] <FILE>
+
+Quick script to automate the flipping of bit endianness
+
+positional arguments:
+  <FILE>              name of file containing hex values
+
+optional arguments:
+  -h, --help          show this help message and exit
+  -s <N>, --size <N>  number of bits in integer representation (default: 16).
+                      Choices: [16, 32, 64]
 ```
 
 ### Requirements

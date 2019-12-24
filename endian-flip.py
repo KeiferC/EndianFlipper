@@ -30,8 +30,8 @@ import sys, argparse
 #
 def main():
         args = parse_arguments()
-        int_rep = args.size
-        filename = args.filename
+        int_size = args["size"]
+        filename = args["filename"]
         hex_arr = parse_infile(filename)
         
         print(*flip_endian(int_size, hex_arr))
@@ -70,9 +70,10 @@ def flip_endian(int_size, hex_arr):
 #                       {int} size: # of bits for int representation
 #
 def parse_arguments():
-        description = "Quick script to automate the flipping of bit endianness."
-        file_help = "Name of file containing hex values."
-        size_help = "Number of bits in integer representation."
+        description = "Quick script to automate the flipping of bit endianness"
+        file_help = "name of file containing hex values"
+        size_help = "number of bits in integer representation (default: 16). \
+                Choices: [16, 32, 64]"
 
         parser = argparse.ArgumentParser(description=description)
 
