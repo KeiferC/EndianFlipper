@@ -34,14 +34,14 @@ def main():
         filename = args["filename"]
         hex_arr = parse_infile(filename)
         
-        print(*flip_endian(int_size, hex_arr))
+        print(*flip_endian(int_size, hex_arr), sep=",")
         sys.exit()
 
 
 #########################################
 # Functions                             #
 #########################################
-# 
+#
 # Given a dictionary containing a number of bits for an integer
 # representation and an array of hex values, flips endianness of hex 
 # values in accordance with the integer representation. Returns an array 
@@ -90,7 +90,12 @@ def parse_arguments():
 # @returns      {list} array of hex values to flip
 #
 def parse_infile(filename):
-        hex_arr = ["test", "one"]
+        hex_arr = []
+
+        with open(filename, 'r') as file:
+                for line in file:
+                        for word in line.split():
+                                hex_arr.append(word)
 
         return hex_arr
 
