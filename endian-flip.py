@@ -30,13 +30,13 @@ import sys, argparse
 #
 def main():
         args = parse_arguments()
-        num_nibbles = (int) (args["size"] / 4)
+        nibbles_per_word = (int) (args["size"] / 4)
         filename = args["filename"]
 
         hex_string = parse_infile(filename)
-        hex_string = clean_hex_string(num_nibbles, hex_string)
+        hex_string = clean_hex_string(nibbles_per_word, hex_string)
 
-        print(*flip_endian(num_nibbles, hex_string))
+        print(*flip_endian(nibbles_per_word, hex_string))
         sys.exit()
 
 
@@ -49,30 +49,30 @@ def main():
 # values in accordance with the integer representation. Returns an array 
 # of flipped hex values.
 #
-# @param        {int} num_nibbles: # of nibbles in a word
+# @param        {int} nibbles_per_word: # of nibbles in a word
 # @param        {string} hex_string: string of hex values to flip
 # @returns      {list} array of flipped hex values
 #
-def flip_endian(num_nibbles, hex_string):
-        words_arr = get_words(num_nibbles, hex_string)
+def flip_endian(nibbles_per_word, hex_string):
+        words_arr = get_words(nibbles_per_word, hex_string)
         return flip_words(words_arr)
 
 # 
 # Given the number of nibbles in a word and the hex string, returns
 # an array of hex words
 #
-# @param        {int} num_nibbles: # of nibbles in a word
+# @param        {int} nibbles_per_word: # of nibbles in a word
 # @param        {string} hex_string: string of hex values to parse
 # @returns      {list} array of hex words
 #
-def get_words(num_nibbles, hex_string):
+def get_words(nibbles_per_word, hex_string):
         words_arr = []
 
-        for i in range(0, len(hex_string), num_nibbles):
+        for i in range(0, len(hex_string), nibbles_per_word):
                 word = ""
                 nibbles = 0
 
-                while (nibbles < num_nibbles):
+                while (nibbles < nibbles_per_word):
                         word += hex_string[i + nibbles]
                         nibbles += 1
                 
@@ -105,17 +105,17 @@ def flip_words(words_arr):
 # a buffer of zeros to ensure a divisible number of bits according
 # to the established integer representation
 #
-# @param        {int} num_nibbles: # of nibbles per word
+# @param        {int} nibbles_per_word: # of nibbles per word
 # @param        {string} hex_string: string of hex values to clean
 # @returns      {string} hex_string prepended with zeros buffer
 #
-def clean_hex_string(num_nibbles, hex_string):
+def clean_hex_string(nibbles_per_word, hex_string):
         length = len(hex_string)
-        offset = (int) (length % num_nibbles)
+        offset = (int) (length % nibbles_per_word)
         zeros_buffer = 0
 
         if (offset != 0):
-                zeros_buffer = num_nibbles - offset
+                zeros_buffer = nibbles_per_word - offset
         
         return hex_string.zfill(length + zeros_buffer)
 
@@ -155,10 +155,18 @@ def parse_arguments():
 def parse_infile(filename):
         hex_string = ""
 
-        with open(filename, 'r') as file:
-                for line in file:
-                        for word in line.split():
-                                hex_string += word
+        try:
+                with open(filename, 'r') as file:
+                        for line in file:
+                                for word in line.split():
+                                        hex_string += word
+        except FileNotFoundError:
+                print("No such file \'{}\' in directory.".format(filename))
+                sys.exit("Error: FileNotFoundError.")
+        except:
+                print("Unable to open file \'{}\'.".format(filename))
+                sys.exit("Error: Unable to open file.")
+
 
         return hex_string
 
