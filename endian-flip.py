@@ -36,7 +36,7 @@ def main():
         hex_string = parse_infile(filename)
         hex_string = clean_hex_string(num_nibbles, hex_string)
 
-        print(*flip_endian(num_nibbles, hex_string), sep=",")
+        print(*flip_endian(num_nibbles, hex_string))
         sys.exit()
 
 
@@ -88,8 +88,17 @@ def get_words(num_nibbles, hex_string):
 # @returns      {list} an array of flipped hex words
 #
 def flip_words(words_arr):
-        # TODO
-        return words_arr
+        flipped_arr = []
+
+        for word in words_arr:
+                flipped_word = ""
+
+                for nibble in range(len(word) - 1, 0, -2):
+                        flipped_word += (word[nibble - 1] + word[nibble])
+                
+                flipped_arr.append(flipped_word)
+
+        return flipped_arr
 
 #
 # Given the number of nibbles per word and a hex string, prepends
