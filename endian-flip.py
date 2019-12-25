@@ -14,7 +14,6 @@
 #                       - Binary conversion (output)
 #                       - Decimal conversion (output)
 #                       - ASCII conversion (output)
-#                       - Robust num bits testing
 #
 
 import sys, argparse
@@ -166,7 +165,6 @@ def parse_infile(filename):
         except:
                 print("Unable to open file \'{}\'.".format(filename))
                 sys.exit("Error: Unable to open file.")
-
 
         return hex_string
 
