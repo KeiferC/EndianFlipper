@@ -26,15 +26,17 @@ import sys, argparse
 # Validates input, parses command-line arguments, runs program.
 #
 # @param        n/a
-# @return       n/a
+# @returns      n/a
 #
 def main():
         args = parse_arguments()
-        int_size = args["size"]
+        num_nibbles = (int) (args["size"] / 4)
         filename = args["filename"]
-        hex_arr = parse_infile(filename)
-        
-        print(*flip_endian(int_size, hex_arr), sep=",")
+
+        hex_string = parse_infile(filename)
+        hex_string = clean_hex_string(num_nibbles, hex_string)
+
+        print(*flip_endian(num_nibbles, hex_string), sep=",")
         sys.exit()
 
 
@@ -47,14 +49,66 @@ def main():
 # values in accordance with the integer representation. Returns an array 
 # of flipped hex values.
 #
-# @param        {int} int_size: # bits for int representation
-#               {list} hex_arr: array of hex values to flip
-# @return       {list} array of flipped hex values
+# @param        {int} num_nibbles: # of nibbles in a word
+# @param        {string} hex_string: string of hex values to flip
+# @returns      {list} array of flipped hex values
 #
-def flip_endian(int_size, hex_arr):
-        # TODO
+def flip_endian(num_nibbles, hex_string):
+        words_arr = get_words(num_nibbles, hex_string)
+        return flip_words(words_arr)
 
-        return hex_arr
+# 
+# Given the number of nibbles in a word and the hex string, returns
+# an array of hex words
+#
+# @param        {int} num_nibbles: # of nibbles in a word
+# @param        {string} hex_string: string of hex values to parse
+# @returns      {list} array of hex words
+#
+def get_words(num_nibbles, hex_string):
+        words_arr = []
+
+        for i in range(0, len(hex_string), num_nibbles):
+                word = ""
+                nibbles = 0
+
+                while (nibbles < num_nibbles):
+                        word += hex_string[i + nibbles]
+                        nibbles += 1
+                
+                words_arr.append(word)
+        
+        return words_arr
+
+#
+# Helper to flip_endian. Given an array of words, reverse the order
+# of the bytes in each word.
+#
+# @param        {list} words_arr: array of hex words
+# @returns      {list} an array of flipped hex words
+#
+def flip_words(words_arr):
+        # TODO
+        return words_arr
+
+#
+# Given the number of nibbles per word and a hex string, prepends
+# a buffer of zeros to ensure a divisible number of bits according
+# to the established integer representation
+#
+# @param        {int} num_nibbles: # of nibbles per word
+# @param        {string} hex_string: string of hex values to clean
+# @returns      {string} hex_string prepended with zeros buffer
+#
+def clean_hex_string(num_nibbles, hex_string):
+        length = len(hex_string)
+        offset = (int) (length % num_nibbles)
+        zeros_buffer = 0
+
+        if (offset != 0):
+                zeros_buffer = num_nibbles - offset
+        
+        return hex_string.zfill(length + zeros_buffer)
 
 
 #########################################
@@ -87,17 +141,17 @@ def parse_arguments():
 # Given a filename, opens file and returns an array of hex values to flip
 #
 # @param        {string} filename: file to open
-# @returns      {list} array of hex values to flip
+# @returns      {string} string of hex values to flip
 #
 def parse_infile(filename):
-        hex_arr = []
+        hex_string = ""
 
         with open(filename, 'r') as file:
                 for line in file:
                         for word in line.split():
-                                hex_arr.append(word)
+                                hex_string += word
 
-        return hex_arr
+        return hex_string
 
 
 #########################################
